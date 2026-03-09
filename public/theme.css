@@ -1,0 +1,249 @@
+@import url('https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap');
+
+body{
+    font-family: "Sour Gummy";
+    font-size: large;
+    margin: 0;
+    padding: 0;
+}
+.page-content{
+    max-width: 60%;
+    margin: 30px auto;
+}
+/* HEADER */
+header {
+    background-image: url("https://img.freepik.com/premium-vector/foods-doodles-hand-drawn-sketchy-vector-background-seamless-pattern_449603-680.jpg?w=1800");
+    background-size: cover;
+    text-align: center;
+    font-size: 70px;
+    color: rgb(172,30,25);
+    font-family: "Cherry Bomb One";
+    font-weight: bold;
+    padding: 40px;
+}
+
+/* NAVIGATION */
+div.nav {
+    display: flex;
+    background-color: rgb(92,59,38);
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+
+div.nav a {
+    color: white;
+    font-family: "Sour Gummy";
+    font-size: 18px;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+div.nav a:hover {
+    color: rgb(241,204,68);
+}
+
+/* SIDE COLUMN */
+div.container {
+    display: flex;
+    flex-direction: row;
+    font-size: 16px;
+    color: black;
+}
+
+div.container > div {
+    margin: 25px;
+}
+div.container .side{
+    width: 300px;
+    flex-shrink: 0;
+    background-color: rgb(241,204,68);
+    padding: 10px;
+}
+div.container .main{
+    flex-grow: 1;
+}
+
+/* TEXT STYLE */
+h1{
+    font-weight: bold;
+    font-size: 30px;
+    color: rgb(237,115,39);
+}
+h2{
+    font-weight: bold;
+    font-size: 20px;
+    color: rgb(92,59,38);
+}
+.center{
+    text-align: center;
+}
+ul {
+    list-style: square;
+    list-style-position: inside;
+}
+
+/* BUTTON & INPUT*/
+input[type="text"], input[type="number"], input[type="checkbox"] {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0;
+    box-sizing: border-box;
+}
+input[type="checkbox"] {
+    width: auto;
+}
+.button {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: rgb(58,91,43);
+    color: white;
+    text-decoration: none;
+    border-radius: 15px;
+    font-weight: bold;
+}
+.button:hover {
+    background-color:  rgb(241,204,68);
+}
+
+/* TABLE */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+    font-size: 16px;
+}
+table th,
+table td {
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid rgb(241,204,68);
+}
+table th {
+    background-color: rgb(92,59,38);
+    color: white;
+}
+table tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* CATEGORY */
+.category-section {
+    margin-bottom: 28px;
+}
+.category-title {
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgb(92,59,38);
+}
+.category-title:hover {
+    color: rgb(237,115,39);
+}
+.toggle-icon {
+    font-size: 0.8rem;
+    color: rgb(237,115,39);
+}
+
+/* RECIPE DETAIL PAGE */
+.recipe-detail {
+    max-width: 700px;
+    margin: 0 auto;
+}
+.recipe-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 12px 0 24px;
+    font-size: 0.95rem;
+}
+.recipe-meta span {
+    background-color: rgb(241,204,68);
+    color: rgb(92,59,38);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+.ingredients-list {
+    list-style: none;
+    padding: 0;
+}
+.ingredients-list li {
+    position: relative;
+    padding: 7px 0;
+    border-bottom: 1px solid #f0e8d8;
+}
+.ingredient-hover {
+    font-weight: bold;
+    color: black;
+    cursor: pointer;
+    text-decoration: none;
+}
+.hint {
+    font-size: 0.85rem;
+    color: #888;
+    font-style: italic;
+    margin-bottom: 8px;
+}
+.ingredient-popup {
+    display: none;
+    position: fixed;
+    background: white;
+    border: 2px solid rgb(241,204,68);
+    border-radius: 10px;
+    padding: 12px 16px;
+    max-width: 260px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    font-size: 0.88rem;
+    line-height: 1.6;
+    z-index: 1000;
+    pointer-events: none;
+    color: rgb(92,59,38);
+}
+.instructions-section {
+    margin-top: 24px;
+}
+.instructions-section p {
+    line-height: 1.8;
+    white-space: pre-wrap;
+}
+.button.small {
+    padding: 5px 12px;
+    font-size: 0.82rem;
+    border-radius: 10px;
+}
+.button.secondary {
+    background-color: rgb(92,59,38);
+}
+.button.secondary:hover {
+    background-color: rgb(241,204,68);
+    color: rgb(92,59,38);
+}
+.tried-tag {
+    display: inline-block;
+    background-color: rgb(58,91,43);
+    color: white;
+    font-size: 0.6em;
+    font-family: "Sour Gummy";
+    padding: 4px 10px;
+    border-radius: 20px;
+    vertical-align: middle;
+    margin-left: 10px;
+}
+
+/* FOOTER */
+footer {
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #f1f1f1;
+    text-align: center;
+    font-size: 12px;
+    color: rgb(92,59,38);
+    padding: 10px;
+    box-sizing: border-box;
+}

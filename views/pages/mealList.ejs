@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <%- include('../partials/head') %>
+        <div class="page-content">
+            <h1>Recipe List</h1>
+
+            <input type="text" id="searchInput" placeholder="Search recipes..." oninput="filterRecipes()" style="margin-bottom:20px;">
+
+            <% const categories = Object.keys(grouped); %>
+            <% if (categories.length === 0) { %>
+                <p class="center">No recipes yet. <a href="/addRecipe">Add one!</a></p>
+            <% } else { %>
+                <% categories.forEach(mealType => { %>
+                    <div class="category-section">
+                        <h2 class="category-title" onclick="toggleSection(this)">
+                            <%= mealType ? mealType.charAt(0).toUpperCase() + mealType.slice(1) : 'Uncategorized' %>
+                            <span class="toggle-icon">▼</span>
+                        </h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Protein</th>
+                                    <th>Cuisine</th>
+                                    <th>Difficulty</th>
+                                    <th>Cook Time</th>
+                                    <th>Serves</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% grouped[mealType].forEach(recipe => { %>
+                                <tr class="recipe-row">
+                                    <td><%= recipe.title %></td>
+                                    <td><%= recipe.prot_type %></td>
+                                    <td><%= recipe.cuisine %></td>
+                                    <td><%= recipe.difficulty %></td>
+                                    <td><%= recipe.cook_mins %> mins</td>
+                                    <td><%= recipe.servings %></td>
+                                    <td><a href="/recipe/<%= recipe.recipe_id %>" class="button small">View</a></td>
+                                </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                <% }) %>
+            <% } %>
+
+            <p class="center"><a href="/addRecipe" class="button">Add a new recipe!</a></p>
+        </div>
+        <%- include('../partials/foot') %>
+
+        <script>
+            function filterRecipes() {
+                const query = document.getElementById('searchInput').value.toLowerCase();
+                document.querySelectorAll('.recipe-row').forEach(row => {
+                    row.style.display = row.textContent.toLowerCase().includes(query) ? '' : 'none';
+                });
+                document.querySelectorAll('.category-section').forEach(section => {
+                    const anyVisible = [...section.querySelectorAll('.recipe-row')]
+                        .some(r => r.style.display !== 'none');
+                    section.style.display = anyVisible ? '' : 'none';
+                });
+            }
+
+            function toggleSection(titleEl) {
+                const table  = titleEl.nextElementSibling;
+                const icon   = titleEl.querySelector('.toggle-icon');
+                const hidden = table.style.display === 'none';
+                table.style.display = hidden ? '' : 'none';
+                icon.textContent    = hidden ? '▼' : '▶';
+            }
+        </script>
+    </body>
+</html>

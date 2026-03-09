@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <%- include('../partials/head') %>
+        <div class="page-content">
+            <div class="recipe-detail">
+                <h1>
+                    <%= recipe.title %>
+                    <% if (recipe.tried == 1 || recipe.tried === true) { %><span class="tried-tag">Tried c:</span><% } %> 
+                </h1>
+                <div class="recipe-meta">
+                    <% if (recipe.cuisine) { %><span><%= recipe.cuisine %></span><% } %>
+                    <% if (recipe.category) { %><span><%= recipe.category %></span><% } %>
+                    <% if (recipe.difficulty) { %><span><%= recipe.difficulty %></span><% } %>
+                    <% if (recipe.prep_mins) { %><span>Prep: <%= recipe.prep_mins %> mins</span><% } %>
+                    <% if (recipe.cook_mins != null) { %><span>Cook: <%= recipe.cook_mins %> mins</span><% } %>
+                    <% if (recipe.servings) { %><span>Serves: <%= recipe.servings %></span><% } %>
+                    <% if (recipe.protein_gr) { %><span>Protein: <%= recipe.protein_gr %>g</span><% } %>
+                </div>
+                <% if (ingredients.length > 0) { %>
+                <div>
+                    <h2>Ingredients</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ingredient</th>
+                                <th>Quantity</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% ingredients.forEach(ing => { %>
+                            <tr>
+                                <td><%= ing.ingr_name %></td>
+                                <td><%= ing.quantity ? ing.quantity + ' ' + ing.unit : '—' %></td>
+                                <td><%= ing.notes || '—' %></td>
+                            </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+                <% } %>
+
+                <div class="instructions-section">
+                    <h2>Instructions</h2>
+                    <p><%= recipe.instruct %></p>
+                </div>
+
+                <% if (recipe.ref_url) { %>
+                <p><a href="<%= recipe.ref_url %>" class="button" target="_blank">Original Recipe</a></p>
+                <% } %>
+                <p>
+                    <a href="/list" class="button secondary">Back to List by Protein</a>
+                    &nbsp;
+                    <a href="/mealList" class="button secondary">Back to List by Meal</a>
+                </p>
+            </div>
+        </div>
+        <%- include('../partials/foot') %>
+    </body>
+</html>
+

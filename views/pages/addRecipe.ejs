@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+    <%- include('../partials/head') %>
+        <div class="page-content">
+            <h1>New Recipe</h1>
+
+            <form id="recipeForm" action="/add" method="POST">
+
+                <label for="title">Recipe Title: *</label><br>
+                <input type="text" id="title" name="title" maxlength="150" required><br>
+                <span class="error-msg" id="titleError"></span><br>
+
+                <label for="prot_type">Protein Type: *</label><br>
+                <select id="prot_type" name="prot_type" required style="width:100%;padding:8px;margin:5px 0;">
+                    <option value="">-- Select --</option>
+                    <option value="chicken">Chicken</option>
+                    <option value="beef">Beef</option>
+                    <option value="turkey">Turkey</option>
+                    <option value="tofu">Tofu</option>
+                    <option value="grains">Grains</option>
+                    <option value="dairy">Dairy</option>
+                </select><br>
+                <span class="error-msg" id="protError"></span><br>
+
+                <label for="category">Meal Category:</label><br>
+                <select id="category" name="category" style="width:100%;padding:8px;margin:5px 0;">
+                    <option value="">-- Select --</option>
+                    <option value="breakfast">Breakfast</option>
+                    <option value="brunch">Brunch</option>
+                    <option value="main">Main</option>
+                    <option value="snack">Snack</option>
+                    <option value="dessert">Dessert</option>
+                </select><br><br>
+
+                <label for="cuisine">Cuisine:</label><br>
+                <input type="text" id="cuisine" name="cuisine"><br><br>
+
+                <label for="difficulty">Difficulty:</label><br>
+                <select id="difficulty" name="difficulty" style="width:100%;padding:8px;margin:5px 0;">
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select><br><br>
+
+                <label for="prep_mins">Prep Time (mins):</label><br>
+                <input type="number" id="prep_mins" name="prep_mins" min="0"><br><br>
+
+                <label for="cook_mins">Cook Time (mins):</label><br>
+                <input type="number" id="cook_mins" name="cook_mins" min="0"><br><br>
+
+                <label for="servings">Servings:</label><br>
+                <input type="number" id="servings" name="servings" min="1"><br><br>
+
+                <label for="instruct">Instructions: *</label><br>
+                <textarea id="instruct" name="instruct" rows="5" required style="width:100%;padding:8px;box-sizing:border-box;"></textarea><br>
+                <span class="error-msg" id="instructError"></span><br>
+
+                <label for="protein_gr">Protein (g):</label><br>
+                <input type="number" id="protein_gr" name="protein_gr" min="0"><br><br>
+
+                <label for="ref_url">Reference URL:</label><br>
+                <input type="url" id="ref_url" name="ref_url" style="width:100%;padding:8px;margin:5px 0;box-sizing:border-box;"><br><br>
+
+                <% if (ingredients && ingredients.length > 0) { %>
+                <label>Ingredients:</label><br>
+                <small style="color:#888;">Check an ingredient to include it, then enter the amount.</small><br><br>
+
+                <table id="ingredientTable">
+                    <thead>
+                        <tr>
+                            <th style="width:40px;"></th>
+                            <th>Ingredient</th>
+                            <th>Category</th>
+                            <th>Amount</th>
+                            <th>Unit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%
+                        let currentCat = null;
+                        ingredients.forEach(ing => {
+                            if (ing.category !== currentCat) {
+                                currentCat = ing.category;
+                        %>
+                        <tr style="background:rgb(241,204,68);font-weight:bold;">
+                            <td colspan="5" style="padding:6px 10px;text-transform:capitalize;color:rgb(92,59,38);">
+                                <%= currentCat %>
+                            </td>
+                        </tr>
+                        <% } %>
+                        <tr class="ingr-row">
+                            <td style="text-align:center;">
+                                <input type="checkbox"
+                                    name="ingredients"
+                                    value="<%= ing.ingr_id %>"
+                                    onchange="toggleQty(this)">
+                            </td>
+                            <td><%= ing.ingr_name %></td>
+                            <td style="color:#888;font-size:0.9rem;"><%= ing.category %></td>
+                            <td>
+                                <input type="text"
+                                    name="ingr_qty_<%= ing.ingr_id %>"
+                                    placeholder="e.g. 2"
+                                    disabled
+                                    style="width:70px;padding:4px;opacity:0.4;">
+                            </td>
+                            <td style="color:#888;font-size:0.9rem;"><%= ing.unit %></td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+                <br>
+                <% } %>
+
+                <label>New Ingredients:</label><br>
+                <small style="color:#888;">Add ingredients not yet in the list. They will be saved to the database.</small><br><br>
+
+                <div id="newIngredientFields"></div>
+
+                <button type="button" onclick="addIngredientRow()" style="
+                    background: none;
+                    border: 2px dashed rgb(92,59,38);
+                    color: rgb(92,59,38);
+                    padding: 6px 16px;
+                    border-radius: 10px;
+                    cursor: pointer;
+                    font-family: inherit;
+                    font-size: 0.95rem;
+                    margin-bottom: 20px;
+                ">+ Add ingredient</button><br><br>
+
+                <button type="submit" class="button" onclick="return validateForm()">Save Recipe</button>
+            </form>
+        </div>
+        <%- include('../partials/foot') %>
+
+        <script>
+            function toggleQty(checkbox) {
+                const row = checkbox.closest('tr');
+                const qtyInput = row.querySelector('input[type="text"]');
+                qtyInput.disabled = !checkbox.checked;
+                qtyInput.style.opacity = checkbox.checked ? '1' : '0.4';
+                if (!checkbox.checked) qtyInput.value = '';
+            }
+
+            let newIngredientCount = 0;
+
+            function addIngredientRow() {
+                newIngredientCount++;
+                const i = newIngredientCount;
+                const container = document.getElementById('newIngredientFields');
+
+                const row = document.createElement('div');
+                row.id = 'newIngr_' + i;
+                row.style.cssText = 'display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:8px;align-items:center;margin-bottom:8px;padding:8px;background:#f9f9f9;border:1px solid #eee;border-radius:6px;';
+
+                row.innerHTML = `
+                    <input type="text" name="new_ingr_name[]" placeholder="Name *"
+                        style="padding:6px;box-sizing:border-box;">
+                    <select name="new_ingr_category[]" style="padding:6px;">
+                        <option value="protein">protein</option>
+                        <option value="vegetable">vegetable</option>
+                        <option value="oil">oil</option>
+                        <option value="spice">spice</option>
+                        <option value="dairy">dairy</option>
+                        <option value="grain">grain</option>
+                        <option value="other">other</option>
+                    </select>
+                    <input type="text" name="new_ingr_unit[]" placeholder="Unit (e.g. tbsp)"
+                        style="padding:6px;box-sizing:border-box;">
+                    <input type="text" name="new_ingr_qty[]" placeholder="Amount (e.g. 2)"
+                        style="padding:6px;box-sizing:border-box;">
+                    <button type="button" onclick="removeRow('newIngr_${i}')"
+                        style="background:none;border:none;color:rgb(172,30,25);font-size:1.2rem;cursor:pointer;padding:0 6px;">✕</button>
+                `;
+
+                container.appendChild(row);
+            }
+
+            function removeRow(id) {
+                const el = document.getElementById(id);
+                if (el) el.remove();
+            }
+
+            function validateForm() {
+                let valid = true;
+                document.querySelectorAll('.error-msg').forEach(el => el.textContent = '');
+
+                const title    = document.getElementById('title').value.trim();
+                const protType = document.getElementById('prot_type').value;
+                const instruct = document.getElementById('instruct').value.trim();
+
+                if (!title) {
+                    document.getElementById('titleError').textContent = 'Recipe title is required.';
+                    valid = false;
+                }
+                if (!protType) {
+                    document.getElementById('protError').textContent = 'Please select a protein type.';
+                    valid = false;
+                }
+                if (!instruct) {
+                    document.getElementById('instructError').textContent = 'Instructions are required.';
+                    valid = false;
+                } else if (instruct.length < 20) {
+                    document.getElementById('instructError').textContent = 'Instructions seem too short. Please add more detail.';
+                    valid = false;
+                }
+
+                const newNames = document.querySelectorAll('[name="new_ingr_name[]"]');
+                const newUnits = document.querySelectorAll('[name="new_ingr_unit[]"]');
+                newNames.forEach((nameEl, idx) => {
+                    if (nameEl.value.trim() && !newUnits[idx].value.trim()) {
+                        newUnits[idx].style.border = '1px solid rgb(172,30,25)';
+                        valid = false;
+                    } else {
+                        newUnits[idx].style.border = '';
+                    }
+                });
+
+                return valid;
+            }
+        </script>
+    </body>
+</html>
